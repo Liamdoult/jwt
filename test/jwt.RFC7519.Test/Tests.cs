@@ -4,15 +4,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace jwt.RFC7519.Test;
 
-[TestClass]
-public class RFC7519 {
-
+public static class TestDefaults {
     public static JwtHandlerOptions DefaultTestOptions => new() {
         ExpirationOptions = new() {
             ExpirationRequired = false,
         }
     };
+}
 
+[TestClass]
+public class RFC7519 {
     /// <summary>
     /// Asserts as per Section 4 of RFC 7159 [RFC7159], the JSON object consists of zero
     /// or more name/value pairs (or members)
@@ -21,7 +22,7 @@ public class RFC7519 {
     public void WhenNoClaims_ThenDoeNotFail() {
         const string raw = "eyJhbGciOiJIUzI1NiJ9.e30.ZRrHA1JJJW8opsbCGfG_HACGpVUMN_a9IV7pAx_Zmeo";
 
-        new JwtHandler(DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+        new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
 
     /// <summary
@@ -37,7 +38,7 @@ public class RFC7519 {
             const string raw = "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
 
             new JwtHandler(
-                DefaultTestOptions,
+                TestDefaults.DefaultTestOptions,
                 clock: new Clock(getCurrentTime: () => 1300819379)
             ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
             token!.Header.Type.Should().Be("JWT");
@@ -66,7 +67,7 @@ public class RFC7519 {
         public void ClaimShouldBeUnique_WhenRegisteredClaim() {
             const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZW4iLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.pKBFZvgZzz1HKAmBNapgM4SDDo53zekCcs6cIM7sVxQ";
 
-            new JwtHandler(DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+            new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
             token!.Body.Issuer.Should().Be("ben");
         }
 
@@ -74,7 +75,7 @@ public class RFC7519 {
         public void ClaimShouldBeUnique_WhenCustomClaim() {
             const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiY3VzdG9tIjoiYiJ9.M6ZXKV11MZ5-cXmPJ6vipk9DH-VD6JUJaXfMc-4KHh0";
 
-            new JwtHandler(DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+            new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
             token!.Body.Claims.Should().ContainKey("custom").WhoseValue.GetString().Should().Be("b");
         }
     }
@@ -95,7 +96,72 @@ public class RFC7519 {
     public void UnknownClaim_DoesNotFail() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjdXN0b20iOiJqb2UifQ.QEk0Kc-0TWZXlczNULRLPszkB4k5fM1a4AZUVGgQx7U";
 
-        new JwtHandler(DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+        new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+    }
+}
+
+
+/// <summary>
+/// Asserts 4.1.1. "iss" (Issuer) Claim
+///
+/// The "iss" (issuer) claim identifies the principal that issued the JWT. The
+/// processing of this claim is generally application specific.  The "iss" value
+/// is a case-sensitive string containing a StringOrURI value. Use of this claim
+/// is OPTIONAL.
+/// </summary>
+[TestClass]
+public class Section4_1_1 {
+
+    /// <summary>
+    /// Validates Iss claim with string value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsIssIsString_ThenSucceeds() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0ZXN0LWlzc3VlciJ9.3leULaLh04_dzbdcVZKfmWWkYZQcGSK3E_yUIJw16PM";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Validates Iss claim with URI value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsIssIsUri_ThenFails() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lzc3Vlci50b2tlbnMuY29tLyJ9.PReUHD0W6L8wguLyhhNuYdfwPNjnD8JJ2LMiGjLDYaY";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Validates Iss claim with URI value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsIssIsNumber_ThenFails() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjEyMzR9.3H9GB9WVri4r3VtcgiipPCewk9nL6ZJWQTbNrHLnmpk";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeFalse();
+    }
+
+    /// <summary>
+    /// Use of iss claim is optional.
+    /// </summary>
+    [TestMethod]
+    public void IssClaimIsOptional() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
     }
 }
 
