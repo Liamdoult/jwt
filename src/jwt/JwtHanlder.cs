@@ -1,14 +1,22 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using jwt.Options;
 using jwt.Token;
 
 namespace jwt;
 
 public class JwtHandler
 {
-    private const string e1 = "E1: Invalid token structure.";
-    public JwtHandler() {
+    private Clock _clock { get; init; }
 
+    private JwtHandlerOptions _options { get; init; }
+
+    public JwtHandler(
+        JwtHandlerOptions? options = null,
+        Clock? clock = null
+    ) {
+        _options = options ?? new();
+        _clock = clock ?? new(clockSkew: _options.ExpirationOptions.ClockSkew);
     }
 
     public bool TryGetValue(string rawToken, [NotNullWhen(true)] out Token.Token? token, [NotNullWhen(false)] out string? error) {
@@ -17,7 +25,7 @@ public class JwtHandler
 
         var splitToken = rawToken.Split(".");
         if (splitToken.Length != 3) {
-            error = e1;
+            error = Errors.InvalidTokenStructure;
             return false;
         }
 
@@ -32,16 +40,44 @@ public class JwtHandler
         var b64decodedHeader = Convert.FromBase64String(b64Header);
         var b64decodedBody = Convert.FromBase64String(b64Body);
 
-        Header? header = JsonSerializer.Deserialize<Header>(b64decodedHeader);
-        Body? body = JsonSerializer.Deserialize<Body>(b64decodedBody);
+        Header? header;
+        Body? body;
+        try {
+            header = JsonSerializer.Deserialize<Header>(b64decodedHeader);
+            body = JsonSerializer.Deserialize<Body>(b64decodedBody);
+        } catch (JsonException)
+        {
+            error = Errors.InvalidTokenStructure;
+            return false;
+        }
+
         var signature = new Signature { RawSignature = b64Signature };
 
         if (header is null || body is null) {
-            error = e1;
+            error = Errors.InvalidTokenStructure;
             return false;
         }
 
         token = new Token.Token(header, body, signature);
+
+        // Validate Token Expiration
+        if (token.Body.ExpirationTime is null)
+        {
+            if (_options.ExpirationOptions.ExpirationRequired) {
+                error = Errors.MissingRequiredClaim;
+                return false;
+            }
+        }
+        else
+        {
+            int currentEpoch;
+            if (token.Body.ExpirationTime <= (currentEpoch = _clock.GetExpirationEpoch())) {
+                Console.WriteLine($"{Errors.TokenExpired} (token exp: {token.Body.ExpirationTime}, {nameof(_clock.GetExpirationEpoch)}: {currentEpoch}");
+                error = Errors.TokenExpired;
+                return false;
+            }
+        }
+
         return true;
     }
 

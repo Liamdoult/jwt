@@ -11,7 +11,7 @@ public class ExampleToken
 
     public ExampleToken()
     {
-        _handler = new JwtHandler();
+        _handler = new JwtHandler(clock: new Clock(getCurrentTime: () => 1300819379));
     }
 
     [Benchmark]
