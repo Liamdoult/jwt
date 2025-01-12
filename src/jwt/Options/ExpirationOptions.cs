@@ -12,7 +12,7 @@ public class ExpirationOptions
     /// than a few minutes, to account for clock skew.
     /// </summary>
     [Required]
-    public TimeSpan ClockSkew { get; init; } = TimeSpan.Zero;
+    public TimeSpan ClockSkew { get; set; } = TimeSpan.Zero;
 
     /// <summary>
     /// Enforces that tokens have `exp` claim.
@@ -21,7 +21,7 @@ public class ExpirationOptions
     /// Expiration will always be validated if the claim is found in the token.
     /// But if set to false, tokens without `exp` claim will fail. It is highly
     /// recommended that this value remains true.
-    /// </remarks>
+    /// </remarksprincipal>
     [Required]
-    public bool ExpirationRequired = true;
+    public bool ExpirationRequired { get; set; } = true;
 }

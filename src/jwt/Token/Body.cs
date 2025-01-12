@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using jwt.Converters;
 
 namespace jwt.Token;
 
@@ -39,6 +40,7 @@ public class Body
     /// generally application specific. Use of this claim is OPTIONAL.
     /// </summary>
     [JsonPropertyName("aud")]
+    [JsonConverter(typeof(OptionalListConverter))]
     public string[]? Audience { get; init; }
 
     /// <summary>

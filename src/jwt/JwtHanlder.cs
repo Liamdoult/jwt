@@ -78,6 +78,25 @@ public class JwtHandler
             }
         }
 
+        // Validate Token Audiance
+        if (_options.AudianceOptions.IsAudianceValidationEnabled) {
+            if (token.Body.Audience is null) {
+                if (_options.AudianceOptions.IsAudianceClaimRequired) {
+                    error = Errors.MissingRequiredClaim;
+                    return false;
+                }
+
+                if (_options.AudianceOptions.PrincipalAudiance is not null) {
+                    error = Errors.InvalidAudiance;
+                    return false;
+                }
+            }
+            else if (!token.Body.Audience.Contains(_options.AudianceOptions.PrincipalAudiance)) {
+                error = Errors.InvalidAudiance;
+                return false;
+            }
+        }
+
         return true;
     }
 

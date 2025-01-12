@@ -40,6 +40,9 @@ public class ExpirationClaimTests {
 
         new JwtHandler(
             new() {
+                AudianceOptions = new() {
+                    IsAudianceValidationEnabled = false,
+                },
                 ExpirationOptions = new() {
                     ExpirationRequired = false,
                 }

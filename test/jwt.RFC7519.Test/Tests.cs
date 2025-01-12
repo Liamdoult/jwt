@@ -8,6 +8,9 @@ public static class TestDefaults {
     public static JwtHandlerOptions DefaultTestOptions => new() {
         ExpirationOptions = new() {
             ExpirationRequired = false,
+        },
+        AudianceOptions = new() {
+            IsAudianceValidationEnabled = false,
         }
     };
 }
@@ -128,7 +131,7 @@ public class Section4_1_1 {
     /// Validates Iss claim with URI value.
     /// </summary>
     [TestMethod]
-    public void WhenIsIssIsUri_ThenFails() {
+    public void WhenIsIssIsUri_ThenSucceeds() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lzc3Vlci50b2tlbnMuY29tLyJ9.PReUHD0W6L8wguLyhhNuYdfwPNjnD8JJ2LMiGjLDYaY";
 
         new JwtHandler(TestDefaults.DefaultTestOptions)
@@ -138,7 +141,7 @@ public class Section4_1_1 {
     }
 
     /// <summary>
-    /// Validates Iss claim with URI value.
+    /// Validates Iss claim with number value.
     /// </summary>
     [TestMethod]
     public void WhenIsIssIsNumber_ThenFails() {
@@ -195,7 +198,7 @@ public class Section4_1_2 {
     /// Validates Sub claim with URI value.
     /// </summary>
     [TestMethod]
-    public void WhenIsSubIsUri_ThenFails() {
+    public void WhenIsSubIsUri_ThenSucceeds() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJodHRwczovL3N1Yi5pZGVudGl0eS5jb20vIn0.A-9bulUaIUaB28YZNF780zy2ZSFrJ2A6kQuXmkIRu-s";
 
         new JwtHandler(TestDefaults.DefaultTestOptions)
@@ -205,7 +208,7 @@ public class Section4_1_2 {
     }
 
     /// <summary>
-    /// Validates Sub claim with URI value.
+    /// Validates Sub claim with number value.
     /// </summary>
     [TestMethod]
     public void WhenIsSubIsNumber_ThenFails() {
@@ -222,6 +225,157 @@ public class Section4_1_2 {
     /// </summary>
     [TestMethod]
     public void SubClaimIsOptional() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+}
+
+/// <summary>
+/// Asserts 4.1.3 "sub" (Subject) Claim
+///
+/// The "aud" (audience) claim identifies the recipients that the JWT is
+/// intended for. Each principal intended to process the JWT MUST identify
+/// itself with a value in the audience claim. If the principal processing the
+/// claim does not identify itself with a value in the "aud" claim when this
+/// claim is present, then the JWT MUST be rejected. In the general case, the
+/// "aud" value is an array of case- sensitive strings, each containing a
+/// StringOrURI value. In the special case when the JWT has one audience, the
+/// "aud" value MAY be a single case-sensitive string containing a StringOrURI
+/// value. The interpretation of audience values is generally application
+/// specific.  Use of this claim is OPTIONAL.
+/// </summary>
+[TestClass]
+public class Section4_1_3 {
+
+    /// <summary>
+    /// Validates Aud claim with string value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsAudIsString_ThenSucceeds() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ0ZXN0LWF1ZGlhbmNlIn0.rAhIq2WL933BXimaK5NtgwREKwqL6wCs5a0kXsXdg3g";
+
+        var options = TestDefaults.DefaultTestOptions;
+        options.AudianceOptions.IsAudianceValidationEnabled = true;
+        options.AudianceOptions.PrincipalAudiance = "test-audiance";
+
+        new JwtHandler(options)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Validates Aud claim with URI value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsAudIsUri_ThenSucceeds() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwczovL2F1ZGlhbmNlLmlkZW50aXR5LmNvbSJ9.A-F4C2PhbvCcmzcnqySbk_tW9q-l7S81O_d8ZVy_mEk";
+
+        var options = TestDefaults.DefaultTestOptions;
+        options.AudianceOptions.IsAudianceValidationEnabled = true;
+        options.AudianceOptions.PrincipalAudiance = "https://audiance.identity.com";
+
+        new JwtHandler(options)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Validates Sub claim with number value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsAudIsNumber_ThenFails() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOjEyMzR9.lK-d4VMUvNCErEJfLlbRlGky_L_VxVkQvY-mLO9hidw";
+
+        var options = TestDefaults.DefaultTestOptions;
+        options.AudianceOptions.IsAudianceValidationEnabled = true;
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeFalse();
+    }
+
+    /// <summary>
+    /// Validates Aud claim with List of string and URI values.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsAudIsList_WithStringAndUri_ThenSucceeds() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsidGVzdC1hdWRpYW5jZSIsImh0dHBzOi8vYXVkaWFuY2UuaWRlbnRpdHkuY29tIl19.1N4c2BvguKhRzYG08HN1z8XI5_SClDuQqMx5I5gGCv4";
+
+        var options = TestDefaults.DefaultTestOptions;
+        options.AudianceOptions.IsAudianceValidationEnabled = true;
+        options.AudianceOptions.PrincipalAudiance = "test-audiance";
+
+        new JwtHandler(options)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Validates Aud claim with List of string and URI values.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsAudIsList_WithNumberValue_ThenFails() {
+        // Token aud value `[1234]`
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsxMjM0XX0.CigHsjXWqGbzZilbVMGZqnqN25Wi2AczTlWWCg8qrsw";
+
+        var options = TestDefaults.DefaultTestOptions;
+        options.AudianceOptions.IsAudianceValidationEnabled = true;
+
+        new JwtHandler(options)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeFalse();
+    }
+
+    /// <summary>
+    /// Ensure that if the principal is not present in the audiance then the
+    /// token is rejected.
+    /// </summary>
+    [TestMethod]
+    public void IfPrincipalIsPresentInAud_ThenSucceeds() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsidGVzdC1hdWRpYW5jZSIsImh0dHBzOi8vYXVkaWFuY2UuaWRlbnRpdHkuY29tIl19.1N4c2BvguKhRzYG08HN1z8XI5_SClDuQqMx5I5gGCv4";
+
+        var options = TestDefaults.DefaultTestOptions;
+        options.AudianceOptions.IsAudianceValidationEnabled = true;
+        options.AudianceOptions.PrincipalAudiance = "test-audiance";
+
+        new JwtHandler(options)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Ensure that if the principal is not present in the audiance then the
+    /// token is rejected.
+    /// </summary>
+    [TestMethod]
+    public void IfPrincipalIsNotPresentInAud_ThenFails() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsidGVzdC1hdWRpYW5jZSIsImh0dHBzOi8vYXVkaWFuY2UuaWRlbnRpdHkuY29tIl19.1N4c2BvguKhRzYG08HN1z8XI5_SClDuQqMx5I5gGCv4";
+
+        var options = TestDefaults.DefaultTestOptions;
+        options.AudianceOptions.IsAudianceValidationEnabled = true;
+        options.AudianceOptions.PrincipalAudiance = "different-principal";
+
+        new JwtHandler(options)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeFalse();
+    }
+
+    /// <summary>
+    /// Use of Aud claim is optional.
+    /// </summary>
+    [TestMethod]
+    public void AudClaimIsOptional() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
         new JwtHandler(TestDefaults.DefaultTestOptions)
@@ -279,6 +433,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
+            TestDefaults.DefaultTestOptions,
             clock: new Clock(getCurrentTime: () => 1736691480)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
@@ -292,6 +447,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
+            TestDefaults.DefaultTestOptions,
             clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691481 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.TokenExpired);
@@ -306,6 +462,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
+            TestDefaults.DefaultTestOptions,
             clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691482 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.TokenExpired);
@@ -320,6 +477,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
+            TestDefaults.DefaultTestOptions,
             clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691480 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
@@ -343,12 +501,9 @@ public class Section4_1_4 {
     public void ExpClaimIsOptional() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
-        new JwtHandler(
-            new() {
-                ExpirationOptions = new() {
-                    ExpirationRequired = false,
-                }
-            })
+        var options = TestDefaults.DefaultTestOptions;
+
+        new JwtHandler(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();

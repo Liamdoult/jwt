@@ -7,4 +7,6 @@ public static class Errors {
     public const string TokenExpired = E2;
     public const string E3 = "E3: Missing required claim.";
     public const string MissingRequiredClaim = E3;
+    public const string E4 = "E4: Invalid Audiance.";
+    public const string InvalidAudiance = E4;
 }
