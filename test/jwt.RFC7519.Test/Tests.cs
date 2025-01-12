@@ -100,9 +100,8 @@ public class RFC7519 {
     }
 }
 
-
 /// <summary>
-/// Asserts 4.1.1. "iss" (Issuer) Claim
+/// Asserts 4.1.1 "iss" (Issuer) Claim
 ///
 /// The "iss" (issuer) claim identifies the principal that issued the JWT. The
 /// processing of this claim is generally application specific.  The "iss" value
@@ -166,7 +165,74 @@ public class Section4_1_1 {
 }
 
 /// <summary>
-/// Asserts 4.1.4. "exp" (Expiration Time) Claim.
+/// Asserts 4.1.2 "sub" (Subject) Claim
+///
+/// The "sub" (subject) claim identifies the principal that is the
+/// subject of the JWT. The claims in a JWT are normally statements
+/// about the subject. The subject value MUST either be scoped to be
+/// locally unique in the context of the issuer or be globally unique.
+/// The processing of this claim is generally application specific. The
+/// "sub" value is a case-sensitive string containing a StringOrURI
+/// value. Use of this claim is OPTIONAL.
+/// </summary>
+[TestClass]
+public class Section4_1_2 {
+
+    /// <summary>
+    /// Validates Sub claim with string value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsSubIsString_ThenSucceeds() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0LXN1YmplY3QifQ.UMwEygB84qFqmpBMua-SotBRnpPC_yc3u-HousT0UUQ";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Validates Sub claim with URI value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsSubIsUri_ThenFails() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJodHRwczovL3N1Yi5pZGVudGl0eS5jb20vIn0.A-9bulUaIUaB28YZNF780zy2ZSFrJ2A6kQuXmkIRu-s";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Validates Sub claim with URI value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsSubIsNumber_ThenFails() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyMzR9.VF1APcw202nOG136b30o9rmfgjH9rw97loAuF13bUeY";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeFalse();
+    }
+
+    /// <summary>
+    /// Use of Sub claim is optional.
+    /// </summary>
+    [TestMethod]
+    public void SubClaimIsOptional() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+}
+
+/// <summary>
+/// Asserts 4.1.4 "exp" (Expiration Time) Claim.
 ///
 /// The "exp" (expiration time) claim identifies the expiration time on or
 /// after which the JWT MUST NOT be accepted for processing. The processing
