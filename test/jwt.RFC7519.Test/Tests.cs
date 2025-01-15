@@ -405,6 +405,12 @@ public class Section4_1_4 {
         return options;
     }
 
+    private static JwtHandlerOptions ExpirationDefaultOptionsWithClockSkew() {
+        var options = ExpirationDefaultOptions();
+        options.ExpirationOptions.ClockSkew = TimeSpan.FromSeconds(5);
+        return options;
+    }
+
     /// <summary>
     /// Validates time exactly on expiration is invalid.
     /// </summary>
@@ -458,8 +464,8 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
-            ExpirationDefaultOptions(),
-            clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691481 - 5)
+            ExpirationDefaultOptionsWithClockSkew(),
+            clock: new Clock(getCurrentTime: () => 1736691481 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.TokenExpired);
     }
@@ -473,8 +479,8 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
-            ExpirationDefaultOptions(),
-            clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691482 - 5)
+            ExpirationDefaultOptionsWithClockSkew(),
+            clock: new Clock(getCurrentTime: () => 1736691482 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.TokenExpired);
     }
@@ -488,8 +494,8 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
-            ExpirationDefaultOptions(),
-            clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691480 - 5)
+            ExpirationDefaultOptionsWithClockSkew(),
+            clock: new Clock(getCurrentTime: () => 1736691480 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
 
