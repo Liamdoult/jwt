@@ -16,7 +16,7 @@ public class JwtHandler
         Clock? clock = null
     ) {
         _options = options ?? new();
-        _clock = clock ?? new(clockSkew: _options.ExpirationOptions.ClockSkew);
+        _clock = clock ?? new();
     }
 
     public bool TryGetValue(string rawToken, [NotNullWhen(true)] out Token.Token? token, [NotNullWhen(false)] out string? error) {
@@ -72,7 +72,7 @@ public class JwtHandler
             else
             {
                 int currentEpoch;
-                if (token.Body.ExpirationTime <= (currentEpoch = _clock.GetExpirationEpoch())) {
+                if (token.Body.ExpirationTime <= (currentEpoch = _clock.GetExpirationEpoch(_options.ExpirationOptions.ClockSkew))) {
                     Console.WriteLine($"{Errors.TokenExpired} (token exp: {token.Body.ExpirationTime}, {nameof(_clock.GetExpirationEpoch)}: {currentEpoch}");
                     error = Errors.TokenExpired;
                     return false;
