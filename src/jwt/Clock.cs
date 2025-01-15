@@ -11,4 +11,6 @@ public class Clock {
     }
 
     public int GetExpirationEpoch() => _getCurrentTime() + (int)_clockSkew.TotalSeconds;
+
+    public int GetNotBeforeEpoch(TimeSpan clockSkew) => _getCurrentTime() - (int)clockSkew.TotalSeconds;
 }

@@ -78,6 +78,26 @@ public class JwtHandler
             }
         }
 
+        // Validate Not Before
+        if (_options.NotBeforeOptions.IsNotBeforeValidationEnabled) {
+            if (token.Body.NotBefore is null)
+            {
+                if (_options.NotBeforeOptions.IsNotBeforeClaimRequired) {
+                    error = Errors.MissingRequiredClaim;
+                    return false;
+                }
+            }
+            else
+            {
+                int currentEpoch;
+                if (token.Body.NotBefore > (currentEpoch = _clock.GetNotBeforeEpoch(_options.NotBeforeOptions.ClockSkew))) {
+                    Console.WriteLine($"{Errors.TokenNotBefore} (token nbf: {token.Body.NotBefore}, {nameof(_clock.GetNotBeforeEpoch)}: {currentEpoch}");
+                    error = Errors.TokenNotBefore;
+                    return false;
+                }
+            }
+        }
+
         // Validate Token Audiance
         if (_options.AudianceOptions.IsAudianceValidationEnabled) {
             if (token.Body.Audience is null) {

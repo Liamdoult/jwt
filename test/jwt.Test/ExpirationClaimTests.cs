@@ -43,6 +43,9 @@ public class ExpirationClaimTests {
                 AudianceOptions = new() {
                     IsAudianceValidationEnabled = false,
                 },
+                NotBeforeOptions = new() {
+                    IsNotBeforeClaimRequired = false,
+                },
                 ExpirationOptions = new() {
                     ExpirationRequired = false,
                 }

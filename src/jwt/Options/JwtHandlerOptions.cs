@@ -8,6 +8,10 @@ public class JwtHandlerOptions
     [Required]
     public ExpirationOptions ExpirationOptions { get; init; } = new();
 
+    /// <inheritdoc cref="NotBeforeOptions" />
+    [Required]
+    public NotBeforeOptions NotBeforeOptions { get; init; } = new();
+
     /// <inheritdoc cref="AudianceOptions" />
     [Required]
     public AudianceOptions AudianceOptions { get; init; } = new();

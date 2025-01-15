@@ -65,7 +65,7 @@ public class Body
     /// value. Use of this claim is OPTIONAL.
     /// </summary>
     [JsonPropertyName("nbf")]
-    public string? NotBefore { get; init; }
+    public long? NotBefore { get; init; }
 
     /// <summary>
     /// The "iat" (issued at) claim identifies the time at which the JWT was

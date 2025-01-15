@@ -9,6 +9,9 @@ public static class TestDefaults {
         ExpirationOptions = new() {
             ExpirationRequired = false,
         },
+        NotBeforeOptions = new() {
+            IsNotBeforeValidationEnabled = false,
+        },
         AudianceOptions = new() {
             IsAudianceValidationEnabled = false,
         }
@@ -499,6 +502,147 @@ public class Section4_1_4 {
     /// </summary>
     [TestMethod]
     public void ExpClaimIsOptional() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
+
+        var options = TestDefaults.DefaultTestOptions;
+
+        new JwtHandler(options)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+}
+
+/// <summary>
+/// Asserts 4.1.5 "nbf" (Not Before) Claim.
+///
+/// The "nbf" (not before) claim identifies the time before which the JWT MUST
+/// NOT be accepted for processing. The processing of the "nbf" claim requires
+/// that the current date/time MUST be after or equal to the not-before
+/// date/time listed in the "nbf" claim. Implementers MAY provide for some small
+/// leeway, usually no more than a few minutes, to account for clock skew. Its
+/// value MUST be a number containing a NumericDate value. Use of this claim is
+/// OPTIONAL.
+/// </summary>
+[TestClass]
+public class Section4_1_5 {
+
+    private static JwtHandlerOptions NotBeforeDefaultOptions() {
+        var options = TestDefaults.DefaultTestOptions;
+        options.NotBeforeOptions.IsNotBeforeValidationEnabled = true;
+        return options;
+    }
+
+    private static JwtHandlerOptions NotBeforeDefaultOptionsWithClockSkew() {
+        var options = NotBeforeDefaultOptions();
+        options.NotBeforeOptions.ClockSkew = TimeSpan.FromSeconds(5);
+        return options;
+    }
+
+    /// <summary>
+    /// Validates time exactly on Not Before is valid.
+    /// </summary>
+    [TestMethod]
+    public void WhenTimeIsSameAsNbf_ThenValidationSucceeds() {
+        // Token with nbf set to 1736691481
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
+
+
+        new JwtHandler(
+            NotBeforeDefaultOptions(),
+            clock: new Clock(getCurrentTime: () => 1736691481)
+        ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Validates any time after Not Before is invalid.
+    /// </summary>
+    [TestMethod]
+    public void WhenTimeIsAfterNbf_ThenValidationSucceeds() {
+        // Token with nbf set to 1736691481
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
+
+        new JwtHandler(
+            NotBeforeDefaultOptions(),
+            clock: new Clock(getCurrentTime: () => 1736691482)
+        ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Validates any time before Not Before is invalid.
+    /// </summary>
+    [TestMethod]
+    public void WhenTimeIsBeforeNbf_ThenValidationFails() {
+        // Token with nbf set to 1736691481
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
+
+        new JwtHandler(
+            NotBeforeDefaultOptions(),
+            clock: new Clock(getCurrentTime: () => 1736691480)
+        ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
+        error.Should().Be(Errors.TokenNotBefore);
+    }
+
+    /// <summary>
+    /// Validates time exactly on the Not Before-clockskew is valid.
+    /// </summary>
+    [TestMethod]
+    public void WhenTimeAndClockSkewIsSameAsNbf_ThenValidationSucceeds() {
+        // Token with exp set to 1736691481
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
+
+        new JwtHandler(
+            NotBeforeDefaultOptionsWithClockSkew(),
+            clock: new Clock(getCurrentTime: () => 1736691481 + 5)
+        ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Validates any after Not Before-clockskew is valid.
+    /// </summary>
+    [TestMethod]
+    public void WhenTimeAndClockSkewIsAfterNbf_ThenValidationSucceeds() {
+        // Token with exp set to 1736691481
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
+
+        new JwtHandler(
+            NotBeforeDefaultOptionsWithClockSkew(),
+            clock: new Clock(getCurrentTime: () => 1736691482 + 5)
+        ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Validates any time before Not Before-clockskew is valid.
+    /// </summary>
+    [TestMethod]
+    public void WhenTimeAndClockSkewIsBeforeNbf_ThenValidationFailed() {
+        // Token with exp set to 1736691481
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
+
+        new JwtHandler(
+            NotBeforeDefaultOptionsWithClockSkew(),
+            clock: new Clock(getCurrentTime: () => 1736691480 + 5)
+        ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
+        error.Should().Be(Errors.TokenNotBefore);
+    }
+
+    /// <summary>
+    /// Validates non-NumericDate fails.
+    /// </summary>
+    [TestMethod]
+    [DataRow("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOiJ0ZXN0In0.AbJkTfKICwtvpoDq8fvhwAk6s3CsooTsZnogw9yKSOI")] // Token with nbf set to "test"
+    [DataRow("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjEuMX0.jy6NTHoJ5k0LeRvFCHDnWhRl-nnTiWUXsxsuxeF5g8M")] // Token with nbf set to 1.100
+    public void WhenNbfClaimIsNotNumericDate_ThenFails(string raw) {
+
+        new JwtHandler(NotBeforeDefaultOptions()).TryGetValue(raw, out var token, out var error).Should().BeFalse();
+        error.Should().Be(Errors.InvalidTokenStructure);
+    }
+
+    /// <summary>
+    /// Use of exp claim is optional.
+    /// </summary>
+    [TestMethod]
+    public void NbfClaimIsOptional() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
         var options = TestDefaults.DefaultTestOptions;

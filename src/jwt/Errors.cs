@@ -9,4 +9,6 @@ public static class Errors {
     public const string MissingRequiredClaim = E3;
     public const string E4 = "E4: Invalid Audiance.";
     public const string InvalidAudiance = E4;
+    public const string E5 = "E5: Token Not Before.";
+    public const string TokenNotBefore = E5;
 }
