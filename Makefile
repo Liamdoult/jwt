@@ -1,5 +1,2 @@
 bench:
-	dotnet run -p benchmark -c Release
-
-test:
-	dotnet test
+	dotnet run --project benchmark -c Release

@@ -40,3 +40,9 @@ jobs:
       run: dotnet build -c Release --no-restore
     - name: Benchmark
       run: dotnet run --project benchmark/ -c Release --no-build --verbosity normal
+    - name: Store benchmark result
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'benchmarkdotnet'
+        output-file-path: BenchmarkDotNet.Artifacts/results/jwt.Benchmark.Decode.ExampleToken-report-full-compressed.json
+        fail-on-alert: true

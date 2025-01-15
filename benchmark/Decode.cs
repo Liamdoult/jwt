@@ -3,6 +3,8 @@ using BenchmarkDotNet.Running;
 
 namespace jwt.Benchmark.Decode;
 
+[JsonExporterAttribute.Full]
+[JsonExporterAttribute.FullCompressed]
 [MemoryDiagnoser]
 public class ExampleToken
 {
