@@ -18,10 +18,17 @@ public class ExpirationOptions
     /// Enforces that tokens have `exp` claim.
     /// </summary>
     /// <remarks>
-    /// Expiration will always be validated if the claim is found in the token.
-    /// But if set to false, tokens without `exp` claim will fail. It is highly
-    /// recommended that this value remains true.
+    /// It is highly recommended that this value remains true.
     /// </remarksprincipal>
     [Required]
-    public bool ExpirationRequired { get; set; } = true;
+    public bool IsExpirationClaimRequired { get; set; } = true;
+
+    /// <summary>
+    /// Disable Expiration validation completely.
+    /// </summary>
+    /// <remarks>
+    /// It is highly recommended that this feature is enabled.
+    /// </remarks>
+    [Required]
+    public bool IsExpirationValidationEnabled { get; set; } = true;
 }

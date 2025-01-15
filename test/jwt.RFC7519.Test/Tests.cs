@@ -7,7 +7,7 @@ namespace jwt.RFC7519.Test;
 public static class TestDefaults {
     public static JwtHandlerOptions DefaultTestOptions => new() {
         ExpirationOptions = new() {
-            ExpirationRequired = false,
+            IsExpirationValidationEnabled = false,
         },
         NotBeforeOptions = new() {
             IsNotBeforeValidationEnabled = false,
@@ -399,6 +399,12 @@ public class Section4_1_3 {
 [TestClass]
 public class Section4_1_4 {
 
+    private static JwtHandlerOptions ExpirationDefaultOptions() {
+        var options = TestDefaults.DefaultTestOptions;
+        options.ExpirationOptions.IsExpirationValidationEnabled = true;
+        return options;
+    }
+
     /// <summary>
     /// Validates time exactly on expiration is invalid.
     /// </summary>
@@ -408,6 +414,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
+            ExpirationDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691481)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.TokenExpired);
@@ -422,6 +429,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
+            ExpirationDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691482)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.TokenExpired);
@@ -436,7 +444,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
-            TestDefaults.DefaultTestOptions,
+            ExpirationDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691480)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
@@ -450,7 +458,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
-            TestDefaults.DefaultTestOptions,
+            ExpirationDefaultOptions(),
             clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691481 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.TokenExpired);
@@ -465,7 +473,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
-            TestDefaults.DefaultTestOptions,
+            ExpirationDefaultOptions(),
             clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691482 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.TokenExpired);
@@ -480,7 +488,7 @@ public class Section4_1_4 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
         new JwtHandler(
-            TestDefaults.DefaultTestOptions,
+            ExpirationDefaultOptions(),
             clock: new Clock(clockSkew: TimeSpan.FromSeconds(5), getCurrentTime: () => 1736691480 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
@@ -493,7 +501,7 @@ public class Section4_1_4 {
     [DataRow("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEuMX0.T48rjzoG09qg2goAL_-8GLGDwM5MS1VhKZdkyooi_3c")] // Token with exp set to 1.100
     public void WhenExpClaimIsNotNumericDate_ThenFails(string raw) {
 
-        new JwtHandler().TryGetValue(raw, out var token, out var error).Should().BeFalse();
+        new JwtHandler(ExpirationDefaultOptions()).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.InvalidTokenStructure);
     }
 

@@ -61,20 +61,22 @@ public class JwtHandler
         token = new Token.Token(header, body, signature);
 
         // Validate Token Expiration
-        if (token.Body.ExpirationTime is null)
-        {
-            if (_options.ExpirationOptions.ExpirationRequired) {
-                error = Errors.MissingRequiredClaim;
-                return false;
+        if (_options.ExpirationOptions.IsExpirationValidationEnabled) {
+            if (token.Body.ExpirationTime is null)
+            {
+                if (_options.ExpirationOptions.IsExpirationClaimRequired) {
+                    error = Errors.MissingRequiredClaim;
+                    return false;
+                }
             }
-        }
-        else
-        {
-            int currentEpoch;
-            if (token.Body.ExpirationTime <= (currentEpoch = _clock.GetExpirationEpoch())) {
-                Console.WriteLine($"{Errors.TokenExpired} (token exp: {token.Body.ExpirationTime}, {nameof(_clock.GetExpirationEpoch)}: {currentEpoch}");
-                error = Errors.TokenExpired;
-                return false;
+            else
+            {
+                int currentEpoch;
+                if (token.Body.ExpirationTime <= (currentEpoch = _clock.GetExpirationEpoch())) {
+                    Console.WriteLine($"{Errors.TokenExpired} (token exp: {token.Body.ExpirationTime}, {nameof(_clock.GetExpirationEpoch)}: {currentEpoch}");
+                    error = Errors.TokenExpired;
+                    return false;
+                }
             }
         }
 

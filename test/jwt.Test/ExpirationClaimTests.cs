@@ -16,7 +16,7 @@ public class ExpirationClaimTests {
         var expirationOptions = new ExpirationOptions();
 
         expirationOptions.ClockSkew.Should().Be(TimeSpan.Zero);
-        expirationOptions.ExpirationRequired.Should().BeTrue();
+        expirationOptions.IsExpirationClaimRequired.Should().BeTrue();
     }
 
     [TestMethod]
@@ -26,7 +26,7 @@ public class ExpirationClaimTests {
         new JwtHandler(
             new() {
                 ExpirationOptions = new() {
-                    ExpirationRequired = true,
+                    IsExpirationClaimRequired = true,
                 }
             })
             .TryGetValue(raw, out var token, out var error)
@@ -47,7 +47,7 @@ public class ExpirationClaimTests {
                     IsNotBeforeClaimRequired = false,
                 },
                 ExpirationOptions = new() {
-                    ExpirationRequired = false,
+                    IsExpirationValidationEnabled = false,
                 }
             })
             .TryGetValue(raw, out var token, out var error)
