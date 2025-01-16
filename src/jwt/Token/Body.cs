@@ -74,7 +74,7 @@ public class Body
     /// is OPTIONAL.
     /// </summary>
     [JsonPropertyName("iat")]
-    public string? IssuedAt { get; init; }
+    public long? IssuedAt { get; init; }
 
     /// <summary>
     /// The "jti" (JWT ID) claim provides a unique identifier for the JWT. The

@@ -667,3 +667,71 @@ public class Section4_1_5 {
             .BeTrue();
     }
 }
+
+/// <summary>
+/// Asserts 4.1.6 "iat" (Issued At) Claim
+///
+/// The "iat" (issued at) claim identifies the time at which the JWT was issued.
+/// This claim can be used to determine the age of the JWT. Its value MUST be a
+/// number containing a NumericDate value. Use of this claim is OPTIONAL.
+/// </summary>
+[TestClass]
+public class Section4_1_6 {
+
+    /// <summary>
+    /// Validates Iat claim with number value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsIatIsNumber_ThenSucceeds() {
+        // Token with Iat set to 1736691481
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzY2OTE0ODF9.YPalXBBlE_FU3zJeUDlaA3WYKlhCOh2bAp0M0JJFxss";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Validates Iat claim with string value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsIatIsNotNumber_ThenFails() {
+        // Token with Iat set to "string"
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOiJzdHJpbmcifQ.1pZ0Vb2JG4yDS_RCzar8vbXEe9m_DJPoAQYVBT7Z8lc";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeFalse();
+    }
+
+    /// <summary>
+    /// Validates Iat claim with string value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsIatIsDecimalNumberWithPoints_ThenFails() {
+        // TODO: Improved NumericDate testing
+        // Token with Iat set to 1736691481.413
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzY2OTE0ODEuNDEzfQ.-8pdwbfpf_ECRxaIK-Mrg0oA2nhHUBb75iR8-jEmLvk";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeFalse();
+    }
+
+    /// <summary>
+    /// Use of Iat claim is optional.
+    /// </summary>
+    [TestMethod]
+    public void IatClaimIsOptional() {
+        // Token with no claims set
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+}
