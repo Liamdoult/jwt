@@ -51,7 +51,7 @@ public class JwtHandler
             return false;
         }
 
-        var signature = new Signature { RawSignature = b64Signature };
+        var signature = b64Signature == "" ? null : new Signature { RawSignature = b64Signature };
 
         if (header is null || body is null) {
             error = Errors.InvalidTokenStructure;
@@ -137,6 +137,19 @@ public class JwtHandler
             }
             else if (!token.Body.Audience.Contains(_options.AudianceOptions.PrincipalAudiance)) {
                 error = Errors.InvalidAudiance;
+                return false;
+            }
+        }
+
+        // Validate Signature
+        if (token.Signature is null) {
+            if (!_options.AllowUnsecured) {
+                error = Errors.InvalidTokenSignature;
+                return false;
+            }
+
+            if (token.Header.Algorithm is null || token.Header.Algorithm.ToLowerInvariant() != "none") {
+                error = Errors.InvalidTokenSignature;
                 return false;
             }
         }

@@ -12,5 +12,7 @@ public static class Errors {
     public const string E5 = "E5: Token Not Before.";
     public const string TokenNotBefore = E5;
     public const string E6 = "E6: Invalid Token Type.";
-    public const string InvalidTokenType = E5;
+    public const string InvalidTokenType = E6;
+    public const string E7 = "E7: Invalid Token Signature.";
+    public const string InvalidTokenSignature = E7;
 }

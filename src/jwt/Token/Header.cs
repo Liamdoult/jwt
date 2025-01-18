@@ -4,8 +4,13 @@ using System.Text.Json.Serialization;
 namespace jwt.Token;
 
 public class Header {
+
+    [JsonPropertyName("alg")]
+    public string? Algorithm { get; init; }
+
     [JsonPropertyName("typ")]
     public string? Type { get; init; }
+
     [JsonPropertyName("cty")]
     public string? ContentType { get; init; }
 
