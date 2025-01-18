@@ -185,3 +185,31 @@ public class Section5_2 {
             .BeTrue();
     }
 }
+
+/// <summary>
+/// Asserts 5.3 Replicating Claims as Header Parameters
+///
+/// In some applications using encrypted JWTs, it is useful to have an
+/// unencrypted representation of some claims. This might be used, for instance,
+/// in application processing rules to determine whether and how to process the
+/// JWT before it is decrypted.
+///
+/// This specification allows claims present in the JWT Claims Set to be
+/// replicated as Header Parameters in a JWT that is a JWE, as needed by the
+/// application.  If such replicated claims are present, the application
+/// receiving them SHOULD verify that their values are identical, unless the
+/// application defines other specific processing rules for these claims. It is
+/// the responsibility of the application to ensure that only claims that are
+/// safe to be transmitted in an unencrypted manner are replicated as Header
+/// Parameter values in the JWT.
+///
+/// Section 10.4.1 of this specification registers the "iss" (issuer), "sub"
+/// (subject), and "aud" (audience) Header Parameter names for the purpose of
+/// providing unencrypted replicas of these claims in encrypted JWTs for
+/// applications that need them.  Other specifications MAY similarly register
+/// other names that are registered Claim Names as Header Parameter names, as
+/// needed.
+/// </summary>
+[TestClass]
+public class Section5_3 {
+}
