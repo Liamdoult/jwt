@@ -759,3 +759,32 @@ public class Section4_1_7 {
             .BeTrue();
     }
 }
+
+/// <summary>
+/// Asserts 4.2. Public Claim Names
+///
+/// Claim Names can be defined at will by those using JWTs. However, in order to
+/// prevent collisions, any new Claim Name should either be registered in the
+/// IANA "JSON Web Token Claims" registry established by Section 10.1 or be a
+/// Public Name: a value that contains a Collision-Resistant Name. In each case,
+/// the definer of the name or value needs to take reasonable precautions to
+/// make sure they are in control of the part of the namespace they use to
+/// define the Claim Name.
+/// </summary>
+[TestClass]
+public class Section4_2 {
+
+}
+
+/// <summary>
+/// Asserts 4.3 Private Claim Names
+///
+/// A producer and consumer of a JWT MAY agree to use Claim Names that are
+/// Private Names: names that are not Registered Claim Names (Section 4.1) or
+/// Public Claim Names (Section 4.2). Unlike Public RFC 7519 JSON Web Token
+/// (JWT) May 2015 Claim Names, Private Cl
+/// </summary>
+[TestClass]
+public class Section4_3 {
+
+}
