@@ -1,6 +1,6 @@
 # Json Web Token Validation Implementation
 
-An experimental/educational implementation of RFC 7519 (Currently not fully complaint).
+An experimental/educational implementation of RFC 7519 (Version 30) (Currently not fully complaint).
 
 ## No Dependencies
 
