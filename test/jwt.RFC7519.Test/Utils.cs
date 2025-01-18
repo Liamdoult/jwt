@@ -4,6 +4,9 @@ namespace jwt.RFC7519.Test;
 
 public static class TestDefaults {
     public static JwtHandlerOptions DefaultTestOptions => new() {
+        TypeOptions = new() {
+            IsTypeValidationEnabled = false,
+        },
         ExpirationOptions = new() {
             IsExpirationValidationEnabled = false,
         },

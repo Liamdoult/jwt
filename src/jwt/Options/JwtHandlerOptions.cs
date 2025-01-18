@@ -4,6 +4,10 @@ namespace jwt.Options;
 
 public class JwtHandlerOptions
 {
+    /// <inheritdoc cref="TypeOptions" />
+    [Required]
+    public TypeOptions TypeOptions { get; init; } = new();
+
     /// <inheritdoc cref="ExpirationOptions" />
     [Required]
     public ExpirationOptions ExpirationOptions { get; init; } = new();

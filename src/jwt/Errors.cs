@@ -11,4 +11,6 @@ public static class Errors {
     public const string InvalidAudiance = E4;
     public const string E5 = "E5: Token Not Before.";
     public const string TokenNotBefore = E5;
+    public const string E6 = "E6: Invalid Token Type.";
+    public const string InvalidTokenType = E5;
 }

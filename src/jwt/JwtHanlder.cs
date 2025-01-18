@@ -60,6 +60,20 @@ public class JwtHandler
 
         token = new Token.Token(header, body, signature);
 
+        // Validate Token Type
+        if (_options.TypeOptions.IsTypeValidationEnabled) {
+            if (token.Header.Type is null) {
+                if (_options.TypeOptions.IsTypeHeaderClaimRequired) {
+                    error = Errors.MissingRequiredClaim;
+                    return false;
+                }
+            }
+            else if (token.Header.Type.ToUpperInvariant() != _options.TypeOptions.ExpectedType.ToUpperInvariant()) {
+                error = Errors.InvalidTokenType;
+                return false;
+            }
+        }
+
         // Validate Token Expiration
         if (_options.ExpirationOptions.IsExpirationValidationEnabled) {
             if (token.Body.ExpirationTime is null)
