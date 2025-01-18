@@ -4,6 +4,4 @@ An experimental/educational implementation of RFC 7519 (Version 30) (Currently n
 
 ## No Dependencies
 
-To keep this library as simple and as streamlined as possible, this library does not depend on any installed dependencies.
-
-Obviously benchmark has BenchmarkDotNet and test/ has FluentAssertions and MSTest dependencies.
+To keep this library as simple and as streamlined as possible, this library does not have any external dependencies for src/
