@@ -717,3 +717,45 @@ public class Section4_1_6 {
             .BeTrue();
     }
 }
+
+/// <summary>
+/// Asserts 4.1.7 "jti" (JWT ID) Claim
+///
+/// The "jti" (JWT ID) claim provides a unique identifier for the JWT.  The
+/// identifier value MUST be assigned in a manner that ensures that there is a
+/// negligible probability that the same value will be accidentally assigned to
+/// a different data object; if the application uses multiple issuers,
+/// collisions MUST be prevented among values produced by different issuers as
+/// well. The "jti" claim can be used to prevent the JWT from being replayed.
+/// The "jti" value is a case- sensitive string. Use of this claim is OPTIONAL.
+/// </summary>
+[TestClass]
+public class Section4_1_7 {
+
+    /// <summary>
+    /// Validates jti claim with string value.
+    /// </summary>
+    [TestMethod]
+    public void WhenIsJtiIsString_ThenSucceeds() {
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJpZGVudGlmaWVyIn0._gYBrkKL5WiEZvq_NnTIUP2S428grCf6eUubROj6jQ8";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+
+    /// <summary>
+    /// Use of jti claim is optional.
+    /// </summary>
+    [TestMethod]
+    public void JtiClaimIsOptional() {
+        // Token with no claims set
+        const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
+
+        new JwtHandler(TestDefaults.DefaultTestOptions)
+            .TryGetValue(raw, out var token, out var error)
+            .Should()
+            .BeTrue();
+    }
+}
