@@ -100,7 +100,7 @@ public class Section4 {
 public class Section4_1_1 {
 
     /// <summary>
-    /// Validates Iss claim with string value.
+    /// Validates iss claim with string value.
     /// </summary>
     [TestMethod]
     public void WhenIsIssIsString_ThenSucceeds() {
@@ -113,7 +113,7 @@ public class Section4_1_1 {
     }
 
     /// <summary>
-    /// Validates Iss claim with URI value.
+    /// Validates iss claim with URI value.
     /// </summary>
     [TestMethod]
     public void WhenIsIssIsUri_ThenSucceeds() {
@@ -126,7 +126,7 @@ public class Section4_1_1 {
     }
 
     /// <summary>
-    /// Validates Iss claim with number value.
+    /// Validates iss claim with number value.
     /// </summary>
     [TestMethod]
     public void WhenIsIssIsNumber_ThenFails() {
@@ -167,7 +167,7 @@ public class Section4_1_1 {
 public class Section4_1_2 {
 
     /// <summary>
-    /// Validates Sub claim with string value.
+    /// Validates sub claim with string value.
     /// </summary>
     [TestMethod]
     public void WhenIsSubIsString_ThenSucceeds() {
@@ -180,7 +180,7 @@ public class Section4_1_2 {
     }
 
     /// <summary>
-    /// Validates Sub claim with URI value.
+    /// Validates sub claim with URI value.
     /// </summary>
     [TestMethod]
     public void WhenIsSubIsUri_ThenSucceeds() {
@@ -193,7 +193,7 @@ public class Section4_1_2 {
     }
 
     /// <summary>
-    /// Validates Sub claim with number value.
+    /// Validates sub claim with number value.
     /// </summary>
     [TestMethod]
     public void WhenIsSubIsNumber_ThenFails() {
@@ -206,7 +206,7 @@ public class Section4_1_2 {
     }
 
     /// <summary>
-    /// Use of Sub claim is optional.
+    /// Use of sub claim is optional.
     /// </summary>
     [TestMethod]
     public void SubClaimIsOptional() {
@@ -237,7 +237,7 @@ public class Section4_1_2 {
 public class Section4_1_3 {
 
     /// <summary>
-    /// Validates Aud claim with string value.
+    /// Validates aud claim with string value.
     /// </summary>
     [TestMethod]
     public void WhenIsAudIsString_ThenSucceeds() {
@@ -254,7 +254,7 @@ public class Section4_1_3 {
     }
 
     /// <summary>
-    /// Validates Aud claim with URI value.
+    /// Validates aud claim with URI value.
     /// </summary>
     [TestMethod]
     public void WhenIsAudIsUri_ThenSucceeds() {
@@ -287,7 +287,7 @@ public class Section4_1_3 {
     }
 
     /// <summary>
-    /// Validates Aud claim with List of string and URI values.
+    /// Validates aud claim with List of string and URI values.
     /// </summary>
     [TestMethod]
     public void WhenIsAudIsList_WithStringAndUri_ThenSucceeds() {
@@ -304,7 +304,7 @@ public class Section4_1_3 {
     }
 
     /// <summary>
-    /// Validates Aud claim with List of string and URI values.
+    /// Validates aud claim with List of string and URI values.
     /// </summary>
     [TestMethod]
     public void WhenIsAudIsList_WithNumberValue_ThenFails() {
@@ -357,7 +357,7 @@ public class Section4_1_3 {
     }
 
     /// <summary>
-    /// Use of Aud claim is optional.
+    /// Use of aud claim is optional.
     /// </summary>
     [TestMethod]
     public void AudClaimIsOptional() {
@@ -584,7 +584,7 @@ public class Section4_1_5 {
     /// </summary>
     [TestMethod]
     public void WhenTimeAndClockSkewIsSameAsNbf_ThenValidationSucceeds() {
-        // Token with exp set to 1736691481
+        // Token with nbf set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
         new JwtHandler(
@@ -598,7 +598,7 @@ public class Section4_1_5 {
     /// </summary>
     [TestMethod]
     public void WhenTimeAndClockSkewIsAfterNbf_ThenValidationSucceeds() {
-        // Token with exp set to 1736691481
+        // Token with nbf set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
         new JwtHandler(
@@ -612,7 +612,7 @@ public class Section4_1_5 {
     /// </summary>
     [TestMethod]
     public void WhenTimeAndClockSkewIsBeforeNbf_ThenValidationFailed() {
-        // Token with exp set to 1736691481
+        // Token with nbf set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
         new JwtHandler(
@@ -635,7 +635,7 @@ public class Section4_1_5 {
     }
 
     /// <summary>
-    /// Use of exp claim is optional.
+    /// Use of nbf claim is optional.
     /// </summary>
     [TestMethod]
     public void NbfClaimIsOptional() {
@@ -661,11 +661,11 @@ public class Section4_1_5 {
 public class Section4_1_6 {
 
     /// <summary>
-    /// Validates Iat claim with number value.
+    /// Validates iat claim with number value.
     /// </summary>
     [TestMethod]
     public void WhenIsIatIsNumber_ThenSucceeds() {
-        // Token with Iat set to 1736691481
+        // Token with iat set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzY2OTE0ODF9.YPalXBBlE_FU3zJeUDlaA3WYKlhCOh2bAp0M0JJFxss";
 
         new JwtHandler(TestDefaults.DefaultTestOptions)
@@ -675,11 +675,11 @@ public class Section4_1_6 {
     }
 
     /// <summary>
-    /// Validates Iat claim with string value.
+    /// Validates iat claim with string value.
     /// </summary>
     [TestMethod]
     public void WhenIsIatIsNotNumber_ThenFails() {
-        // Token with Iat set to "string"
+        // Token with iat set to "string"
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOiJzdHJpbmcifQ.1pZ0Vb2JG4yDS_RCzar8vbXEe9m_DJPoAQYVBT7Z8lc";
 
         new JwtHandler(TestDefaults.DefaultTestOptions)
@@ -689,12 +689,12 @@ public class Section4_1_6 {
     }
 
     /// <summary>
-    /// Validates Iat claim with string value.
+    /// Validates iat claim with string value.
     /// </summary>
     [TestMethod]
     public void WhenIsIatIsDecimalNumberWithPoints_ThenFails() {
         // TODO: Improved NumericDate testing
-        // Token with Iat set to 1736691481.413
+        // Token with iat set to 1736691481.413
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzY2OTE0ODEuNDEzfQ.-8pdwbfpf_ECRxaIK-Mrg0oA2nhHUBb75iR8-jEmLvk";
 
         new JwtHandler(TestDefaults.DefaultTestOptions)
@@ -704,7 +704,7 @@ public class Section4_1_6 {
     }
 
     /// <summary>
-    /// Use of Iat claim is optional.
+    /// Use of iat claim is optional.
     /// </summary>
     [TestMethod]
     public void IatClaimIsOptional() {
