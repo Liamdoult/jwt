@@ -60,7 +60,15 @@ public class JwtHandler
 
         token = new Token.Token(header, body, signature);
 
-        // Validate Token Type
+        // Validate Token Content Type (cty)
+        if (_options.ContentTypeOptions.IsTypeValidationEnabled) {
+            if (token.Header.ContentType is not null && token.Header.ContentType.ToUpperInvariant() != _options.ContentTypeOptions.ExpectedType.ToUpperInvariant()) {
+                error = Errors.InvalidTokenType;
+                return false;
+            }
+        }
+
+        // Validate Token Type (typ)
         if (_options.TypeOptions.IsTypeValidationEnabled) {
             if (token.Header.Type is null) {
                 if (_options.TypeOptions.IsTypeHeaderClaimRequired) {
@@ -74,7 +82,7 @@ public class JwtHandler
             }
         }
 
-        // Validate Token Expiration
+        // Validate Token Expiration (exp)
         if (_options.ExpirationOptions.IsExpirationValidationEnabled) {
             if (token.Body.ExpirationTime is null)
             {
@@ -94,7 +102,7 @@ public class JwtHandler
             }
         }
 
-        // Validate Not Before
+        // Validate Token Not Before (nbf)
         if (_options.NotBeforeOptions.IsNotBeforeValidationEnabled) {
             if (token.Body.NotBefore is null)
             {
@@ -114,7 +122,7 @@ public class JwtHandler
             }
         }
 
-        // Validate Token Audiance
+        // Validate Token Audiance (aud)
         if (_options.AudianceOptions.IsAudianceValidationEnabled) {
             if (token.Body.Audience is null) {
                 if (_options.AudianceOptions.IsAudianceClaimRequired) {
