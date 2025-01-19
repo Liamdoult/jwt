@@ -18,7 +18,7 @@ namespace jwt.RFC7519.Test;
 [TestClass]
 public class Section6 {
 
-    public JwtHandlerOptions UnsecuredDefaultOptions() {
+    public ValidationOptions UnsecuredDefaultOptions() {
         var options = TestDefaults.DefaultTestOptions;
         options.AllowUnsecured = true;
         return options;
@@ -77,7 +77,7 @@ public class Section6 {
 [TestClass]
 public class Section6_1 {
 
-    public JwtHandlerOptions UnsecuredDefaultOptions() {
+    public ValidationOptions UnsecuredDefaultOptions() {
         var options = TestDefaults.DefaultTestOptions;
         options.AllowUnsecured = true;
         return options;

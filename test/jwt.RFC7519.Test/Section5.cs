@@ -49,7 +49,7 @@ public class Section5 {
 /// </summary>
 [TestClass]
 public class Section5_1 {
-    private static JwtHandlerOptions TypeDefaultOptions() {
+    private static ValidationOptions TypeDefaultOptions() {
         var options = TestDefaults.DefaultTestOptions;
         options.TypeOptions.IsTypeValidationEnabled = true;
         return options;
@@ -112,7 +112,7 @@ public class Section5_1 {
 /// </summary>
 [TestClass]
 public class Section5_2 {
-    private static JwtHandlerOptions ContentTypeDefaultOptions() {
+    private static ValidationOptions ContentTypeDefaultOptions() {
         var options = TestDefaults.DefaultTestOptions;
         options.ContentTypeOptions.IsTypeValidationEnabled = true;
         return options;

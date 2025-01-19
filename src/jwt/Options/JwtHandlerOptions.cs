@@ -2,7 +2,7 @@
 
 namespace jwt.Options;
 
-public class JwtHandlerOptions
+public class ValidationOptions
 {
     /// <inheritdoc cref="TypeOptions" />
     [Required]

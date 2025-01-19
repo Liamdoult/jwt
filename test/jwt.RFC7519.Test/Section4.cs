@@ -381,13 +381,13 @@ public class Section4_1_3 {
 [TestClass]
 public class Section4_1_4 {
 
-    private static JwtHandlerOptions ExpirationDefaultOptions() {
+    private static ValidationOptions ExpirationDefaultOptions() {
         var options = TestDefaults.DefaultTestOptions;
         options.ExpirationOptions.IsExpirationValidationEnabled = true;
         return options;
     }
 
-    private static JwtHandlerOptions ExpirationDefaultOptionsWithClockSkew() {
+    private static ValidationOptions ExpirationDefaultOptionsWithClockSkew() {
         var options = ExpirationDefaultOptions();
         options.ExpirationOptions.ClockSkew = TimeSpan.FromSeconds(5);
         return options;
@@ -523,13 +523,13 @@ public class Section4_1_4 {
 [TestClass]
 public class Section4_1_5 {
 
-    private static JwtHandlerOptions NotBeforeDefaultOptions() {
+    private static ValidationOptions NotBeforeDefaultOptions() {
         var options = TestDefaults.DefaultTestOptions;
         options.NotBeforeOptions.IsNotBeforeValidationEnabled = true;
         return options;
     }
 
-    private static JwtHandlerOptions NotBeforeDefaultOptionsWithClockSkew() {
+    private static ValidationOptions NotBeforeDefaultOptionsWithClockSkew() {
         var options = NotBeforeDefaultOptions();
         options.NotBeforeOptions.ClockSkew = TimeSpan.FromSeconds(5);
         return options;

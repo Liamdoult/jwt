@@ -3,7 +3,7 @@
 namespace jwt.RFC7519.Test;
 
 public static class TestDefaults {
-    public static JwtHandlerOptions DefaultTestOptions => new() {
+    public static ValidationOptions DefaultTestOptions => new() {
         TypeOptions = new() {
             IsTypeValidationEnabled = false,
         },

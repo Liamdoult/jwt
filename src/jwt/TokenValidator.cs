@@ -9,10 +9,10 @@ public class TokenValidator
 {
     private Clock _clock { get; init; }
 
-    private JwtHandlerOptions _options { get; init; }
+    private ValidationOptions _options { get; init; }
 
     public TokenValidator(
-        JwtHandlerOptions? options = null,
+        ValidationOptions? options = null,
         Clock? clock = null
     ) {
         _options = options ?? new();
