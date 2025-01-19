@@ -85,10 +85,10 @@ public class Section3_1 {
             TestDefaults.DefaultTestOptions,
             clock: new Clock(getCurrentTime: () => 1300819379)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
-        token!.Header.Type.Should().Be("JWT");
-        token!.Header.Algorithm.Should().Be("HS256");
-        token!.Body.Issuer.Should().Be("joe");
-        token!.Body.ExpirationTime.Should().Be(1300819380);
-        token!.Body.Claims.Should().ContainKey("http://example.com/is_root").WhoseValue.GetBoolean().Should().Be(true);
+        token!.Header?.Type.Should().Be("JWT");
+        token!.Header?.Algorithm.Should().Be("HS256");
+        token!.Body?.Issuer.Should().Be("joe");
+        token!.Body?.ExpirationTime.Should().Be(1300819380);
+        token!.Body?.Claims.Should().ContainKey("http://example.com/is_root").WhoseValue.GetBoolean().Should().Be(true);
     }
 }

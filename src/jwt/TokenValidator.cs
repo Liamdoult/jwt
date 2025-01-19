@@ -62,7 +62,7 @@ public class TokenValidator
 
         // Validate Token Content Type (cty)
         if (_options.ContentTypeOptions.IsTypeValidationEnabled) {
-            if (token.Header.ContentType is not null && token.Header.ContentType.ToUpperInvariant() != _options.ContentTypeOptions.ExpectedType.ToUpperInvariant()) {
+            if (token.Header?.ContentType is not null && token.Header.ContentType.ToUpperInvariant() != _options.ContentTypeOptions.ExpectedType.ToUpperInvariant()) {
                 error = Errors.InvalidTokenType;
                 return false;
             }
@@ -70,7 +70,7 @@ public class TokenValidator
 
         // Validate Token Type (typ)
         if (_options.TypeOptions.IsTypeValidationEnabled) {
-            if (token.Header.Type is null) {
+            if (token.Header?.Type is null) {
                 if (_options.TypeOptions.IsTypeHeaderClaimRequired) {
                     error = Errors.MissingRequiredClaim;
                     return false;
@@ -84,7 +84,7 @@ public class TokenValidator
 
         // Validate Token Expiration (exp)
         if (_options.ExpirationOptions.IsExpirationValidationEnabled) {
-            if (token.Body.ExpirationTime is null)
+            if (token.Body?.ExpirationTime is null)
             {
                 if (_options.ExpirationOptions.IsExpirationClaimRequired) {
                     error = Errors.MissingRequiredClaim;
@@ -104,7 +104,7 @@ public class TokenValidator
 
         // Validate Token Not Before (nbf)
         if (_options.NotBeforeOptions.IsNotBeforeValidationEnabled) {
-            if (token.Body.NotBefore is null)
+            if (token.Body?.NotBefore is null)
             {
                 if (_options.NotBeforeOptions.IsNotBeforeClaimRequired) {
                     error = Errors.MissingRequiredClaim;
@@ -124,7 +124,7 @@ public class TokenValidator
 
         // Validate Token Audiance (aud)
         if (_options.AudianceOptions.IsAudianceValidationEnabled) {
-            if (token.Body.Audience is null) {
+            if (token.Body?.Audience is null) {
                 if (_options.AudianceOptions.IsAudianceClaimRequired) {
                     error = Errors.MissingRequiredClaim;
                     return false;
@@ -148,7 +148,7 @@ public class TokenValidator
                 return false;
             }
 
-            if (token.Header.Algorithm is null || token.Header.Algorithm.ToLowerInvariant() != "none") {
+            if (token.Header?.Algorithm is null || token.Header.Algorithm.ToLowerInvariant() != "none") {
                 error = Errors.InvalidTokenSignature;
                 return false;
             }
