@@ -25,7 +25,7 @@ public class Section5 {
         // Token with custom header value "custom": "custom"
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN1c3RvbSI6ImN1c3RvbSJ9.eyJqdGkiOiJpZGVudGlmaWVyIn0.lfx5tkSsJGu2WirOcJczR5_-KP9wRyH8YIOPuq0sE3M";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+        new TokenValidator(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
 }
 
@@ -62,7 +62,7 @@ public class Section5_1 {
     [DataRow("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.Et9HFtf9R3GEMA0IICOfFMVXY7kkTX1wr4qCyhIf58U")] // Token with typ == "JWT"
     [DataRow("eyJhbGciOiJIUzI1NiIsInR5cCI6Imp3dCJ9.e30.nEP4O6wiqdVpXQk_dUOtGlTf4-oVZk2IxjIU_jmb4YI")] // Token with typ == "jwt"
     public void WhenTypCliam_ThenSucceeds(string raw) {
-        new JwtHandler(TypeDefaultOptions())
+        new TokenValidator(TypeDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -76,7 +76,7 @@ public class Section5_1 {
         // Token with typ == 1
         const string raw = "eyJhbGciOiJIUzI1NiIsInR5cCI6MX0.e30.qCNLZuMtTYtnJXA7vW-UZ0C82XrY3oyITuDkYUrwOrM";
 
-        new JwtHandler(TypeDefaultOptions())
+        new TokenValidator(TypeDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -89,7 +89,7 @@ public class Section5_1 {
     public void TypClaimIsOptional() {
         const string raw = "eyJhbGciOiJIUzI1NiJ9.e30.ZRrHA1JJJW8opsbCGfG_HACGpVUMN_a9IV7pAx_Zmeo";
 
-        new JwtHandler(TypeDefaultOptions())
+        new TokenValidator(TypeDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -125,7 +125,7 @@ public class Section5_2 {
     [DataRow("eyJhbGciOiJIUzI1NiIsImN0eSI6IkpXVCJ9.e30.GxKi0Dr5-irrW1FYSrTzafKQHmQRH9l1QU_oLeQ5fK0")] // Token with cty == "JWT"
     [DataRow("eyJhbGciOiJIUzI1NiIsImN0eSI6Imp3dCJ9.e30.DcQVH3aGXTxtzfxkmeXc-EqUh6_0_qzp6r-V6ErNsh0")] // Token with cty == "jwt"
     public void WhenCtyValidationEnabled_AndClaimIsJwt_ThenSucceeds(string raw) {
-        new JwtHandler(ContentTypeDefaultOptions())
+        new TokenValidator(ContentTypeDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -137,7 +137,7 @@ public class Section5_2 {
     [TestMethod]
     [DataRow("eyJhbGciOiJIUzI1NiIsImN0eSI6Ik5TUCJ9.e30.xvd8nLkXb5uBHsB6Ri5hZN0HLSO8JNBUEWRXWucLM5k")] // Token with cty == "NSP"
     public void WhenCtyValidationEnabled_andClaimIsNotJwt_ThenFails(string raw) {
-        new JwtHandler(ContentTypeDefaultOptions())
+        new TokenValidator(ContentTypeDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -151,7 +151,7 @@ public class Section5_2 {
         // Token with cty == 1
         const string raw = "eyJhbGciOiJIUzI1NiIsInR5cCI6MX0.e30.qCNLZuMtTYtnJXA7vW-UZ0C82XrY3oyITuDkYUrwOrM";
 
-        new JwtHandler(ContentTypeDefaultOptions())
+        new TokenValidator(ContentTypeDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -165,7 +165,7 @@ public class Section5_2 {
         // Token with no cty claim
         const string raw = "eyJhbGciOiJIUzI1NiJ9.e30.ZRrHA1JJJW8opsbCGfG_HACGpVUMN_a9IV7pAx_Zmeo";
 
-        new JwtHandler(ContentTypeDefaultOptions())
+        new TokenValidator(ContentTypeDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -179,7 +179,7 @@ public class Section5_2 {
         // Token with no cty claim
         const string raw = "eyJhbGciOiJIUzI1NiJ9.e30.ZRrHA1JJJW8opsbCGfG_HACGpVUMN_a9IV7pAx_Zmeo";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();

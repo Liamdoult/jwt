@@ -5,13 +5,13 @@ using jwt.Token;
 
 namespace jwt;
 
-public class JwtHandler
+public class TokenValidator
 {
     private Clock _clock { get; init; }
 
     private JwtHandlerOptions _options { get; init; }
 
-    public JwtHandler(
+    public TokenValidator(
         JwtHandlerOptions? options = null,
         Clock? clock = null
     ) {

@@ -31,7 +31,7 @@ public class Section6 {
     public void WhenUnsecuredAllowed_AndUnsecuredTokenWithAlgNotNone_ThenFails() {
         const string raw = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
-        new JwtHandler(UnsecuredDefaultOptions())
+        new TokenValidator(UnsecuredDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -90,7 +90,7 @@ public class Section6_1 {
     public void WhenUnsecuredAllowed_AndUnsecured_ThenSucceeds() {
         const string raw = "eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.";
 
-        new JwtHandler(UnsecuredDefaultOptions())
+        new TokenValidator(UnsecuredDefaultOptions())
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();

@@ -23,7 +23,7 @@ public class ExpirationClaimTests {
     public void WhenExpClaimNotPresent_AndExpirationIsRequired_ThenFails() {
         const string raw = "eyJhbGciOiJIUzI1NiJ9.e30.ZRrHA1JJJW8opsbCGfG_HACGpVUMN_a9IV7pAx_Zmeo";
 
-        new JwtHandler(
+        new TokenValidator(
             new() {
                 ExpirationOptions = new() {
                     IsExpirationClaimRequired = true,
@@ -38,7 +38,7 @@ public class ExpirationClaimTests {
     public void WhenExpClaimNotPresent_AndExpirationIsNotRequired_ThenFails() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
-        new JwtHandler(
+        new TokenValidator(
             new() {
                 AudianceOptions = new() {
                     IsAudianceValidationEnabled = false,

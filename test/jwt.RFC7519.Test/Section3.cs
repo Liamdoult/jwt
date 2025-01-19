@@ -81,7 +81,7 @@ public class Section3_1 {
     public void ExampleToken_ShouldDecode() {
         const string raw = "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
 
-        new JwtHandler(
+        new TokenValidator(
             TestDefaults.DefaultTestOptions,
             clock: new Clock(getCurrentTime: () => 1300819379)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();

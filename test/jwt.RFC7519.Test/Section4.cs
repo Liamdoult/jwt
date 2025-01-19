@@ -35,7 +35,7 @@ public class Section4 {
     public void WhenNoClaims_ThenDoeNotFail() {
         const string raw = "eyJhbGciOiJIUzI1NiJ9.e30.ZRrHA1JJJW8opsbCGfG_HACGpVUMN_a9IV7pAx_Zmeo";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+        new TokenValidator(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public class Section4 {
     public void UnknownClaim_DoesNotFail() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjdXN0b20iOiJqb2UifQ.QEk0Kc-0TWZXlczNULRLPszkB4k5fM1a4AZUVGgQx7U";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+        new TokenValidator(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public class Section4 {
         public void ClaimShouldBeUnique_WhenRegisteredClaim() {
             const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZW4iLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.pKBFZvgZzz1HKAmBNapgM4SDDo53zekCcs6cIM7sVxQ";
 
-            new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+            new TokenValidator(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
             token!.Body.Issuer.Should().Be("ben");
         }
 
@@ -82,7 +82,7 @@ public class Section4 {
         public void ClaimShouldBeUnique_WhenCustomClaim() {
             const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiY3VzdG9tIjoiYiJ9.M6ZXKV11MZ5-cXmPJ6vipk9DH-VD6JUJaXfMc-4KHh0";
 
-            new JwtHandler(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
+            new TokenValidator(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
             token!.Body.Claims.Should().ContainKey("custom").WhoseValue.GetString().Should().Be("b");
         }
     }
@@ -106,7 +106,7 @@ public class Section4_1_1 {
     public void WhenIsIssIsString_ThenSucceeds() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0ZXN0LWlzc3VlciJ9.3leULaLh04_dzbdcVZKfmWWkYZQcGSK3E_yUIJw16PM";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -119,7 +119,7 @@ public class Section4_1_1 {
     public void WhenIsIssIsUri_ThenSucceeds() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2lzc3Vlci50b2tlbnMuY29tLyJ9.PReUHD0W6L8wguLyhhNuYdfwPNjnD8JJ2LMiGjLDYaY";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -132,7 +132,7 @@ public class Section4_1_1 {
     public void WhenIsIssIsNumber_ThenFails() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjEyMzR9.3H9GB9WVri4r3VtcgiipPCewk9nL6ZJWQTbNrHLnmpk";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -145,7 +145,7 @@ public class Section4_1_1 {
     public void IssClaimIsOptional() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -173,7 +173,7 @@ public class Section4_1_2 {
     public void WhenIsSubIsString_ThenSucceeds() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0LXN1YmplY3QifQ.UMwEygB84qFqmpBMua-SotBRnpPC_yc3u-HousT0UUQ";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -186,7 +186,7 @@ public class Section4_1_2 {
     public void WhenIsSubIsUri_ThenSucceeds() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJodHRwczovL3N1Yi5pZGVudGl0eS5jb20vIn0.A-9bulUaIUaB28YZNF780zy2ZSFrJ2A6kQuXmkIRu-s";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -199,7 +199,7 @@ public class Section4_1_2 {
     public void WhenIsSubIsNumber_ThenFails() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyMzR9.VF1APcw202nOG136b30o9rmfgjH9rw97loAuF13bUeY";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -212,7 +212,7 @@ public class Section4_1_2 {
     public void SubClaimIsOptional() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -247,7 +247,7 @@ public class Section4_1_3 {
         options.AudianceOptions.IsAudianceValidationEnabled = true;
         options.AudianceOptions.PrincipalAudiance = "test-audiance";
 
-        new JwtHandler(options)
+        new TokenValidator(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -264,7 +264,7 @@ public class Section4_1_3 {
         options.AudianceOptions.IsAudianceValidationEnabled = true;
         options.AudianceOptions.PrincipalAudiance = "https://audiance.identity.com";
 
-        new JwtHandler(options)
+        new TokenValidator(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -280,7 +280,7 @@ public class Section4_1_3 {
         var options = TestDefaults.DefaultTestOptions;
         options.AudianceOptions.IsAudianceValidationEnabled = true;
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -297,7 +297,7 @@ public class Section4_1_3 {
         options.AudianceOptions.IsAudianceValidationEnabled = true;
         options.AudianceOptions.PrincipalAudiance = "test-audiance";
 
-        new JwtHandler(options)
+        new TokenValidator(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -314,7 +314,7 @@ public class Section4_1_3 {
         var options = TestDefaults.DefaultTestOptions;
         options.AudianceOptions.IsAudianceValidationEnabled = true;
 
-        new JwtHandler(options)
+        new TokenValidator(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -332,7 +332,7 @@ public class Section4_1_3 {
         options.AudianceOptions.IsAudianceValidationEnabled = true;
         options.AudianceOptions.PrincipalAudiance = "test-audiance";
 
-        new JwtHandler(options)
+        new TokenValidator(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -350,7 +350,7 @@ public class Section4_1_3 {
         options.AudianceOptions.IsAudianceValidationEnabled = true;
         options.AudianceOptions.PrincipalAudiance = "different-principal";
 
-        new JwtHandler(options)
+        new TokenValidator(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -363,7 +363,7 @@ public class Section4_1_3 {
     public void AudClaimIsOptional() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -401,7 +401,7 @@ public class Section4_1_4 {
         // Token with exp set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
-        new JwtHandler(
+        new TokenValidator(
             ExpirationDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691481)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
@@ -416,7 +416,7 @@ public class Section4_1_4 {
         // Token with exp set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
-        new JwtHandler(
+        new TokenValidator(
             ExpirationDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691482)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
@@ -431,7 +431,7 @@ public class Section4_1_4 {
         // Token with exp set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
-        new JwtHandler(
+        new TokenValidator(
             ExpirationDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691480)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
@@ -445,7 +445,7 @@ public class Section4_1_4 {
         // Token with exp set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
-        new JwtHandler(
+        new TokenValidator(
             ExpirationDefaultOptionsWithClockSkew(),
             clock: new Clock(getCurrentTime: () => 1736691481 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
@@ -460,7 +460,7 @@ public class Section4_1_4 {
         // Token with exp set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
-        new JwtHandler(
+        new TokenValidator(
             ExpirationDefaultOptionsWithClockSkew(),
             clock: new Clock(getCurrentTime: () => 1736691482 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
@@ -475,7 +475,7 @@ public class Section4_1_4 {
         // Token with exp set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY2OTE0ODF9.w_5MK3o_6rqJpH8Fl0q9WdSZEs413a2tS_j2Ly0XlH0";
 
-        new JwtHandler(
+        new TokenValidator(
             ExpirationDefaultOptionsWithClockSkew(),
             clock: new Clock(getCurrentTime: () => 1736691480 - 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
@@ -489,7 +489,7 @@ public class Section4_1_4 {
     [DataRow("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEuMX0.T48rjzoG09qg2goAL_-8GLGDwM5MS1VhKZdkyooi_3c")] // Token with exp set to 1.100
     public void WhenExpClaimIsNotNumericDate_ThenFails(string raw) {
 
-        new JwtHandler(ExpirationDefaultOptions()).TryGetValue(raw, out var token, out var error).Should().BeFalse();
+        new TokenValidator(ExpirationDefaultOptions()).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.InvalidTokenStructure);
     }
 
@@ -502,7 +502,7 @@ public class Section4_1_4 {
 
         var options = TestDefaults.DefaultTestOptions;
 
-        new JwtHandler(options)
+        new TokenValidator(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -544,7 +544,7 @@ public class Section4_1_5 {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
 
-        new JwtHandler(
+        new TokenValidator(
             NotBeforeDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691481)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
@@ -558,7 +558,7 @@ public class Section4_1_5 {
         // Token with nbf set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
-        new JwtHandler(
+        new TokenValidator(
             NotBeforeDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691482)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
@@ -572,7 +572,7 @@ public class Section4_1_5 {
         // Token with nbf set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
-        new JwtHandler(
+        new TokenValidator(
             NotBeforeDefaultOptions(),
             clock: new Clock(getCurrentTime: () => 1736691480)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
@@ -587,7 +587,7 @@ public class Section4_1_5 {
         // Token with nbf set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
-        new JwtHandler(
+        new TokenValidator(
             NotBeforeDefaultOptionsWithClockSkew(),
             clock: new Clock(getCurrentTime: () => 1736691481 + 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
@@ -601,7 +601,7 @@ public class Section4_1_5 {
         // Token with nbf set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
-        new JwtHandler(
+        new TokenValidator(
             NotBeforeDefaultOptionsWithClockSkew(),
             clock: new Clock(getCurrentTime: () => 1736691482 + 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeTrue();
@@ -615,7 +615,7 @@ public class Section4_1_5 {
         // Token with nbf set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3MzY2OTE0ODF9.k5ZqF79Gefg0_FwTlUOoL76ME4QNgoj-_t6VIGtcNfk";
 
-        new JwtHandler(
+        new TokenValidator(
             NotBeforeDefaultOptionsWithClockSkew(),
             clock: new Clock(getCurrentTime: () => 1736691480 + 5)
         ).TryGetValue(raw, out var token, out var error).Should().BeFalse();
@@ -630,7 +630,7 @@ public class Section4_1_5 {
     [DataRow("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjEuMX0.jy6NTHoJ5k0LeRvFCHDnWhRl-nnTiWUXsxsuxeF5g8M")] // Token with nbf set to 1.100
     public void WhenNbfClaimIsNotNumericDate_ThenFails(string raw) {
 
-        new JwtHandler(NotBeforeDefaultOptions()).TryGetValue(raw, out var token, out var error).Should().BeFalse();
+        new TokenValidator(NotBeforeDefaultOptions()).TryGetValue(raw, out var token, out var error).Should().BeFalse();
         error.Should().Be(Errors.InvalidTokenStructure);
     }
 
@@ -643,7 +643,7 @@ public class Section4_1_5 {
 
         var options = TestDefaults.DefaultTestOptions;
 
-        new JwtHandler(options)
+        new TokenValidator(options)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -668,7 +668,7 @@ public class Section4_1_6 {
         // Token with iat set to 1736691481
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzY2OTE0ODF9.YPalXBBlE_FU3zJeUDlaA3WYKlhCOh2bAp0M0JJFxss";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -682,7 +682,7 @@ public class Section4_1_6 {
         // Token with iat set to "string"
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOiJzdHJpbmcifQ.1pZ0Vb2JG4yDS_RCzar8vbXEe9m_DJPoAQYVBT7Z8lc";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -697,7 +697,7 @@ public class Section4_1_6 {
         // Token with iat set to 1736691481.413
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzY2OTE0ODEuNDEzfQ.-8pdwbfpf_ECRxaIK-Mrg0oA2nhHUBb75iR8-jEmLvk";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeFalse();
@@ -711,7 +711,7 @@ public class Section4_1_6 {
         // Token with no claims set
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -739,7 +739,7 @@ public class Section4_1_7 {
     public void WhenIsJtiIsString_ThenSucceeds() {
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJpZGVudGlmaWVyIn0._gYBrkKL5WiEZvq_NnTIUP2S428grCf6eUubROj6jQ8";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
@@ -753,7 +753,7 @@ public class Section4_1_7 {
         // Token with no claims set
         const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.e30.yXvILkvUUCBqAFlAv6wQ1Q-QRAjfe3eSosO949U73Vo";
 
-        new JwtHandler(TestDefaults.DefaultTestOptions)
+        new TokenValidator(TestDefaults.DefaultTestOptions)
             .TryGetValue(raw, out var token, out var error)
             .Should()
             .BeTrue();
