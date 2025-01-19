@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
+using FluentAssertions;
 using jwt.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -89,6 +91,26 @@ public class Section3_1 {
         token!.Header?.Algorithm.Should().Be("HS256");
         token!.Body?.Issuer.Should().Be("joe");
         token!.Body?.ExpirationTime.Should().Be(1300819380);
-        token!.Body?.Claims.Should().ContainKey("http://example.com/is_root").WhoseValue.GetBoolean().Should().Be(true);
+        token!.Body?.Claims.Should().ContainKey("http://example.com/is_root").WhoseValue.As<JsonElement>().GetBoolean().Should().Be(true);
+    }
+
+    [TestMethod]
+    public void ExampleToken_ShouldEncode() {
+        var token = new Token.Token {
+            Header = new() {
+                Type = "JWT",
+                Algorithm = "HS256",
+            },
+            Body = new() {
+                Issuer = "joe",
+                ExpirationTime = 1300819380,
+                Claims = new() {{ "http://example.com/is_root", true }},
+            }
+        };
+
+        new TokenIssuer().TryGetValue(token, out var rawToken, out var error).Should().BeTrue();
+
+        // Adjusted example with jwt.io to match claims ordering of this library.
+        rawToken.Should().StartWith("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ");
     }
 }

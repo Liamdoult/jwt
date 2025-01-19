@@ -100,5 +100,5 @@ public class Body
     /// </example>
     /// </summary>
     [JsonExtensionData]
-    public Dictionary<string, JsonElement>? Claims { get; set; }
+    public Dictionary<string, Object>? Claims { get; set; }
 }
