@@ -44,7 +44,7 @@ jobs:
       uses: benchmark-action/github-action-benchmark@v1
       with:
         tool: 'benchmarkdotnet'
-        output-file-path: BenchmarkDotNet.Artifacts/results/jwt.Benchmark.Decode.ExampleToken-report-full-compressed.json
+        output-file-path: BenchmarkDotNet.Artifacts/results/jwt.Benchmark.*-report-full-compressed.json
         github-token: ${{ secrets.GITHUB_TOKEN }}
         external-data-json-path: ./cache/benchmark-data.json
         fail-on-alert: true
