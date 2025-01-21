@@ -1,6 +1,6 @@
 ﻿using jwt.Options;
 
-namespace jwt.RFC7515.Test;
+namespace jwt.test.utils;
 
 public static class TestDefaults {
     public static ValidationOptions DefaultTestOptions => new() {

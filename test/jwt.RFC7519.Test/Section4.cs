@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using FluentAssertions;
 using jwt.Options;
+using jwt.test.utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace jwt.RFC7519.Test;
@@ -76,7 +77,7 @@ public class Section4 {
             const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiZW4iLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZX0.pKBFZvgZzz1HKAmBNapgM4SDDo53zekCcs6cIM7sVxQ";
 
             new TokenValidator(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
-            token!.Body.Issuer.Should().Be("ben");
+            token!.Body?.Issuer.Should().Be("ben");
         }
 
         [TestMethod]
@@ -84,7 +85,7 @@ public class Section4 {
             const string raw = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwiY3VzdG9tIjoiYiJ9.M6ZXKV11MZ5-cXmPJ6vipk9DH-VD6JUJaXfMc-4KHh0";
 
             new TokenValidator(TestDefaults.DefaultTestOptions).TryGetValue(raw, out var token, out var error).Should().BeTrue();
-            token!.Body.Claims.Should().ContainKey("custom").WhoseValue.As<JsonElement>().GetString().Should().Be("b");
+            token!.Body?.Claims.Should().ContainKey("custom").WhoseValue.As<JsonElement>().GetString().Should().Be("b");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using FluentAssertions;
+using jwt.test.utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace jwt.RFC7515.Test;
