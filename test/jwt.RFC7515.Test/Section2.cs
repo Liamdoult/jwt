@@ -2,7 +2,7 @@
 using jwt.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace jwt.RFC7519.Test;
+namespace jwt.RFC7515.Test;
 
 /// <summary>
 /// Asserts Section 2 Terminology

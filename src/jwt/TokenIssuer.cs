@@ -12,20 +12,23 @@ public class TokenIssuer
 
     private IssuingOptions _options { get; init; }
 
+    private JsonSerializerOptions _jsonSerializerOptions { get; init; }
+
     public TokenIssuer(
         IssuingOptions? options = null,
-        Clock? clock = null
+        Clock? clock = null,
+        JsonSerializerOptions? jsonSerializerOptions = null
     ) {
         _options = options ?? new();
         _clock = clock ?? new();
+        _jsonSerializerOptions = jsonSerializerOptions ?? new JsonSerializerOptions {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        };
     }
 
     public bool TryGetValue(Token.Token token, [NotNullWhen(true)] out string? rawToken, [NotNullWhen(false)] out string? error) {
-        var options = new JsonSerializerOptions {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        };
-        var header = JsonSerializer.Serialize(token.Header, options);
-        var body = JsonSerializer.Serialize(token.Body, options);
+        var header = JsonSerializer.Serialize(token.Header, _jsonSerializerOptions);
+        var body = JsonSerializer.Serialize(token.Body, _jsonSerializerOptions);
         var signature = "";
 
         var headerB64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(header));
