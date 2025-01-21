@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using jwt.Options;
-using jwt.Token;
 
 namespace jwt;
 
@@ -19,7 +18,7 @@ public class TokenValidator
         _clock = clock ?? new();
     }
 
-    public bool TryGetValue(string rawToken, [NotNullWhen(true)] out Token.Token? token, [NotNullWhen(false)] out string? error) {
+    public bool TryGetValue(string rawToken, [NotNullWhen(true)] out Token? token, [NotNullWhen(false)] out string? error) {
         token = null;
         error = null;
 
@@ -58,7 +57,7 @@ public class TokenValidator
             return false;
         }
 
-        token = new Token.Token(header, body, signature);
+        token = new Token(header, body, signature);
 
         // Validate Token Content Type (cty)
         if (_options.ContentTypeOptions.IsTypeValidationEnabled) {

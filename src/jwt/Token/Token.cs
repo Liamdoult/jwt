@@ -1,4 +1,4 @@
-namespace jwt.Token;
+namespace jwt;
 
 public class Token {
     public Header? Header { get; init; }

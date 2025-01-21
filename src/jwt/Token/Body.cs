@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using jwt.Converters;
 
-namespace jwt.Token;
+namespace jwt;
 
 public class Body
 {

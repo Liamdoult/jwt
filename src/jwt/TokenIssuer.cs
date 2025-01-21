@@ -26,7 +26,7 @@ public class TokenIssuer
         };
     }
 
-    public bool TryGetValue(Token.Token token, [NotNullWhen(true)] out string? rawToken, [NotNullWhen(false)] out string? error) {
+    public bool TryGetValue(Token token, [NotNullWhen(true)] out string? rawToken, [NotNullWhen(false)] out string? error) {
         var header = JsonSerializer.Serialize(token.Header, _jsonSerializerOptions);
         var body = JsonSerializer.Serialize(token.Body, _jsonSerializerOptions);
         var signature = "";

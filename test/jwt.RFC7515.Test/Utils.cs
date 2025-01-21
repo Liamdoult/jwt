@@ -19,7 +19,7 @@ public static class TestDefaults {
         }
     };
 
-    public static Token.Token DefaultToken => new() {
+    public static Token DefaultToken => new() {
         Header = new() {
             Algorithm = "none",
         },

@@ -96,7 +96,7 @@ public class Section3_1 {
 
     [TestMethod]
     public void ExampleToken_ShouldEncode() {
-        var token = new Token.Token {
+        var token = new Token {
             Header = new() {
                 Type = "JWT",
                 Algorithm = "HS256",

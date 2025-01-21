@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace jwt.Token;
+namespace jwt;
 
 public class Header {
 
